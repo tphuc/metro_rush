@@ -127,15 +127,19 @@ class Window(pyglet.window.Window):
 
     def screen_up(self):
         self.focusY += self.moverate
+        self.doupdate()
 
     def screen_down(self):
         self.focusY -= self.moverate
+        self.doupdate()
 
     def screen_left(self):
         self.focusX += self.moverate
+        self.doupdate()
 
     def screen_right(self):
         self.focusX -= self.moverate
+        self.doupdate()
 
     def screen_zoomin(self):
         self.scaleX *= self.zoominrate
@@ -172,7 +176,7 @@ class Window(pyglet.window.Window):
             self.screen_right()
         elif symbol == KEY.down:
             self.screen_down()
-        elif symbol == KEY.right:
+        elif symbol == KEY.left:
             self.screen_left()
         elif symbol == KEY.zoomin:
             self.screen_zoomin()
