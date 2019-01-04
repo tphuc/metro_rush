@@ -1,112 +1,5 @@
-import pyglet
-from pyglet.window import key
-from parseline import parseLineStations
-from random import randint
-#http://www.poketcode.com/en/pyglet/index.html
-rsc_path = 'dot/'
-prefix = '.png'
-CSprite = {'red':rsc_path+'reddot'+prefix,
-           'blue': rsc_path+'bluedot'+prefix,
-           'green' : rsc_path+'greendot'+prefix,
-           'yellow' : rsc_path+'yellowdot'+prefix,
-           'pink' : rsc_path +'pinkdot'+prefix,
-           'violet': rsc_path+'violetdot'+prefix,
-           'magenta': rsc_path+'magentadot'+prefix,
-           'brown': rsc_path+'browndot'+prefix}
 
-WIDTH = 1000
-HEIGHT = 800
-
-
-
-class KEY:
-    zoomin = key.Z
-    zoomout = key.X
-    up = key.W
-    down = key.S
-    left = key.A
-    right = key.D
-
-class Station:
-    size = 10
-    def __init__(self, name, colorSprite, x, y, intersect=False):
-        self.x, self.y = x, y
-        self._create_sprite(colorSprite, self.x, self.y)
-        
-    def _create_sprite(self, colorSprite, x, y):
-        self.image = pyglet.image.load(colorSprite)
-        self.sprite = pyglet.sprite.Sprite(self.image, x, y)
-        self.scalex = Station.size / self.sprite.width
-        self.scaley = Station.size / self.sprite.height
-        self.sprite.update(scale_x = self.scalex, scale_y=self.scaley)
-    
-    def draw(self):
-        self.sprite.draw()
-
-    def offset(self, x, y):
-        self.sprite.x += x
-        self.sprite.y += y
-    
-    def scale(self, scale_):
-        self.scalex *= scale_
-        self.scaley *= scale_
-        self.sprite.update(scale_x=self.scalex, scale_y=self.scaley)
-    
-    def doupdate(self):
-        pass
-
-class RailWay():
-    disparity = (-10,10)
-
-
-    def __init__(self, direction, ntrains, names, start_x, start_y, color):
-        self.ntrains = ntrains
-        self.names = names
-        self.start_x, self.start_y = start_x, start_y
-        self.sprite_img = self.get_sprite_img(color)
-        self.direction = self.get_line_direction(direction)
-        self._init_stations()
-
-    def get_sprite_img(self, color):
-        return CSprite[color]
-
-    def get_line_direction(self, direction):
-        if direction == 'horizontal':
-            self.interval = WIDTH / self.ntrains - self.ntrains
-            return (1, 0)
-        if direction == 'vertical':
-            self.interval = HEIGHT / self.ntrains - self.ntrains
-            return (0, -1)
-    
-    def _init_stations(self):
-        self.stations = []
-        for i in range(self.ntrains):
-            x = self.start_x + self.direction[0]*i*self.interval + self.direction[1]*randint(*RailWay.disparity)
-            y = self.start_y + self.direction[1]*i*self.interval + self.direction[0]*randint(*RailWay.disparity)
-            self.stations.append(Station(self.names[i], self.sprite_img, x, y))
-
-    def draw(self):
-        for station in self.stations:
-            station.draw()
-
-    def offset(self, y, x):
-        pass
-    
-    def scale(self, scale):
-        for station in self.stations:
-            station.scale(scale)
-    
-    def doupdate(self, scale):
-        for station in self.stations:
-            station.doupdate()
-
-
-
-
-
-
-
-    
+from _visualizer import *
 
 
 class Window(pyglet.window.Window):
@@ -122,15 +15,38 @@ class Window(pyglet.window.Window):
         self.zoomoutrate = 0.8
         self.moverate = 50
         self.station_dict = parseLineStations('delhi-metro-stations')
-        self.railwayred = RailWay('horizontal', len(self.station_dict['Red Line']), self.station_dict['Red Line'],
-                     50, 400, 'red')
+        ############### mode ################
+        """ window modes:
+        - moving = 0
+        - selecting = 1
+        - dragging = 2
+        """
+        self.mode = MODE.free
+        self.selecting = None
+        """ Label display name:
+        - display station name when mouse hovering on
+        """
+        ####################################################################################################
+        """ store all the railways """
+        self.railways = []
+        self.stations = []
+        self.init_transit_map()
+        
+
+    def init_transit_map(self):
+        self.railways.append(RailWay('horizontal', len(self.station_dict['Red Line']), self.station_dict['Red Line'],
+                                     50, 400, 'red'))
+        self.railways.append(RailWay('horizontal', len(self.station_dict['Violet Line']), self.station_dict['Violet Line'],
+                                     50, 300, 'magenta'))
+        for railway in self.railways:
+            self.stations += [station for station in railway.stations if station not in self.stations]
 
     def screen_up(self):
-        self.focusY += self.moverate
+        self.focusY -= self.moverate
         self.doupdate()
 
     def screen_down(self):
-        self.focusY -= self.moverate
+        self.focusY += self.moverate
         self.doupdate()
 
     def screen_left(self):
@@ -152,37 +68,84 @@ class Window(pyglet.window.Window):
         self.doupdate()
 
     def doupdate(self):
-        for station in self.railwayred.stations:
-            station.sprite.x *= self.scaleX
-            station.sprite.y *= self.scaleY
-            station.scale(self.scaleX)
-        self.scaleX, self.scaleY = 1, 1
-        centerx = sum([s.sprite.x for s in self.railwayred.stations], 0) // self.railwayred.ntrains
-        centery = sum([s.sprite.y for s in self.railwayred.stations], 0) // self.railwayred.ntrains
-        for station in self.railwayred.stations:
-            station.sprite.x += self.focusX - centerx
-            station.sprite.y += self.focusY - centery
 
+        for station in self.stations:
+            station.x *= self.scaleX
+            station.y *= self.scaleY
+            station.scale(self.scaleX)
+
+        self.scaleX, self.scaleY = 1, 1
+
+        centerx = sum([sum([s.x for s in railway.stations]) //
+                       railway.ntrains for railway in self.railways]) // len(self.railways)
+        centery = sum([sum([s.y for s in railway.stations]) //
+                       railway.ntrains for railway in self.railways]) // len(self.railways)
+
+        for station in self.stations:
+            station.x += self.focusX - centerx
+            station.y += self.focusY - centery
+
+    def reset_mode(self):
+        self.mode = MODE.free
+
+    ############################ window events ################################
+    """
+    @window.event
+    Below is a list of event handler from window
+    """
 
     def on_draw(self):
         self.clear()
-        self.railwayred.draw()
-
+        for railway in self.railways:
+            railway.draw()
 
     def on_key_press(self, symbol, modifiers):
         if symbol == KEY.up:
             self.screen_up()
+            self.reset_mode()
         elif symbol == KEY.right:
             self.screen_right()
+            self.reset_mode()
         elif symbol == KEY.down:
             self.screen_down()
+            self.reset_mode()
         elif symbol == KEY.left:
             self.screen_left()
+            self.reset_mode()
         elif symbol == KEY.zoomin:
             self.screen_zoomin()
+            self.reset_mode()
         elif symbol == KEY.zoomout:
             self.screen_zoomout()
+            self.reset_mode()
+        elif symbol == KEY.drag:
+            self.mode = MODE.draging
+        else:
+            self.reset_mode()
 
-window = Window(800, 600)
-window.doupdate()
-pyglet.app.run()
+    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
+        if self.selecting:
+            self.selecting.setxy(x, y)
+            self.selecting.delete_label()
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        self.selecting = None
+        for railway in self.railways:
+            for station in railway.stations:
+                if station.is_hovering(x, y):
+                    self.selecting = station
+                    return
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        self.selecting = None
+
+    def on_mouse_motion(self, x, y, dx, dy):
+        for railway in self.railways:
+            for station in railway.stations:
+                station.is_hovering(x, y)
+
+
+if __name__ == "__main__":
+    window = Window(WIDTH, HEIGHT)
+    window.doupdate()
+    pyglet.app.run()
