@@ -1,10 +1,190 @@
-#Red
-1:HDS
-2:BESA
-3:ASDD
-4:SSS
-#Blue
-1:NIsda
-2:sdfsad
-3:sdfasdf
-4:sdfasdfsdf
+#red
+Dilshad Garden, 649, 613
+Jhil Mil, 612, 597
+Mansarovar Park, 586, 588
+Shahdara, 556, 575
+Welcome, 543, 569
+Seelampur, 524, 560
+Shastri Park, 505, 549
+Kashmere Gate, 485, 534
+Tis Hazari, 467, 520
+Pul Bangash, 449, 511
+Pratap Nagar, 426, 513
+Shastri Nagar, 400, 521
+Inder Lok, 378, 532
+Kanhaiya Nagar, 357, 543
+Keshav Puram, 336, 557
+Netaji Subhash Place, 313, 569
+Kohat Enclave, 280, 588
+Pitam Pura, 251, 605
+Rohini East, 232, 618
+Rohini West, 207, 639
+Rithala, 181, 657
+#yellow
+Samaypur Badli, 249, 722
+Rohini Sector 18,19, 278, 713
+Haiderpur Badli Mor, 305, 702
+Jahangirpuri, 336, 685
+Adarsh Nagar, 359, 672
+Azadpur, 378, 660
+Model Town, 411, 637
+G.T.B. Nagar, 435, 617
+Vishwavidyalaya, 454, 598
+Vidhan Sabha, 468, 579
+Civil Line, 476, 559
+Kashmere Gate, 485, 534
+Chandni Chowk, 486, 510
+Chawri Bazar, 486, 488
+New Delhi:Conn: Airport Express, 486, 465
+Rajiv Chowk, 484, 442
+Patel Chowk, 483, 424
+Central Secretariat, 484, 403
+Udyog Bhawan, 482, 381
+Lok Kalyan Marg, 483, 360
+Jorbagh, 483, 336
+INA, 482, 317
+AIIMS, 482, 295
+Green Park, 482, 274
+Hauz Khas, 482, 251
+Malviya Nagar, 482, 231
+Saket, 482, 210
+Qutab Minar, 483, 188
+Chhattarpur, 486, 167
+Sultanpur, 483, 145
+Ghitorni, 482, 124
+Arjan Garh, 481, 102
+Guru Dronacharya, 480, 81
+Sikandarpur:Conn: Rapid, 483, 59
+MG Road, 482, 38
+IFFCO Chowk, 481, 17
+Huda City Centre, 479, -5
+#blue
+Dwarka Sec-21, 252, 277
+Dwarka Sec-08, 225, 305
+Dwarka Sec-09, 206, 322
+Dwarka Sec-10, 184, 344
+Dwarka Sec-11, 168, 362
+Dwarka Sec-12, 148, 386
+Dwarka Sec-13, 130, 415
+Dwarka Sec-14, 115, 444
+Dwarka, 112, 468
+Dwarka Mor, 126, 476
+Nawada, 139, 479
+Uttam Nagar West, 161, 479
+Uttam Nagar East, 183, 478
+Janak Puri West, 204, 475
+Janak Puri East, 228, 474
+Tilak Nagar, 256, 472
+Subhash Nagar, 278, 469
+Tagore Garden, 308, 466
+Rajouri Garden, 325, 463
+Ramesh Nagar, 340, 463
+Moti Nagar, 361, 460
+Kirti Nagar, 374, 458
+Shadipur, 385, 458
+Patel Nagar, 404, 456
+Rajendra Place, 418, 454
+Karol Bagh, 433, 453
+Jhandewalan, 446, 449
+R K Ashram Marg, 471, 445
+Rajiv Chowk, 484, 442
+Barakhamba, 502, 438
+Mandi House, 525, 437
+Pragati Maidan, 543, 432
+Indraprastha, 561, 433
+Yamuna Bank, 581, 432
+Akshardham, 599, 430
+Mayur Vihar Phase-1, 613, 429
+Mayur Vihar Extention, 635, 428
+New Ashok Nagar, 655, 427
+Noida Sector-15, 679, 427
+Noida Sector-16, 699, 429
+Noida Sector-18, 717, 428
+Botanical Garden, 749, 428
+Golf Course, 779, 429
+Noida City Center, 812, 428
+#magenta
+Janakpuri West, 204, 475
+Dabri Mor, 228, 439
+Dashrath Puri, 251, 411
+Palam, 280, 380
+Sadar Bazaar Cantonment, 302, 353
+Terminal 1 IGI Airport, 346, 312
+Shankar Vihar, 367, 293
+Vasant Vihar, 388, 275
+Munirka, 413, 263
+R.K Puram, 436, 256
+IIT Delhi, 458, 252
+Hauz Khas, 482, 251
+Panchsheel Park, 509, 247
+Chirag Delhi, 539, 246
+Greater Kailash, 562, 245
+Nehru Enclave, 595, 245
+Kalkaji Mandir, 637, 249
+Okhla N.S.I.C, 650, 275
+Sukhdev Vihar, 663, 298
+Jamia Millia Islamia, 676, 319
+Okhla Vihar, 691, 342
+Jasola Vihar Shaheen Bagh, 705, 363
+Kalindi Kunj, 721, 385
+Okhla Bird Sanctuary, 738, 409
+Botanical Garden, 749, 428
+#pink
+Majlis Park, 438, 702
+Azadpur, 378, 660
+Shalimar Bagh, 348, 616
+Netaji Subhash Place, 313, 569
+Shakurpur, 306, 536
+Punjabi Bagh West, 309, 517
+ESI Hospital, 314, 495
+Rajouri Garden, 325, 463
+Maya Puri, 340, 441
+Naraina Vihar, 356, 414
+Delhi Cantt, 370, 391
+Durgabai Deshmukh South Campus:Conn: Airport Express, 392, 368
+Sir Vishweshwaraiah Moti Bagh, 409, 355
+Bhikaji Cama Place, 427, 342
+Sarojini Nagar, 455, 325
+INA, 482, 317
+South Extension, 512, 315
+Lajpat Nagar, 569, 321
+#violet
+Kashmere Gate, 485, 534
+Lal Quila, 513, 522
+Jama Masjid, 526, 506
+Delhi Gate, 534, 484
+ITO, 536, 461
+Mandi House, 525, 437
+Central Secretariat, 484, 403
+Janpath, 504, 388
+Khan Market, 521, 373
+Jawaharlal Nehru Stadium, 534, 357
+Jangpura, 549, 342
+Lajpat Nagar, 569, 321
+Moolchand, 581, 307
+Kailash Colony, 595, 291
+Nehru Place, 613, 270
+Kalkaji Mandir, 637, 249
+Govind Puri, 691, 258
+Okhla, 726, 260
+Jasola, 758, 259
+Sarita Vihar, 795, 254
+Mohan Estate, 819, 239
+Tughlakabad, 826, 214
+Badarpur, 814, 189
+Sarai, 795, 168
+N.H.P.C. Chowk, 778, 159
+Mewala Maharajpur, 761, 152
+Sector 28 Faridabad, 741, 147
+Badkal Mor, 710, 142
+Old Faridabad, 680, 146
+Neelam Chowk Ajronda, 662, 148
+Bata Chowk, 634, 155
+Escorts Mujesar, 607, 171
+#orange
+New Delhi-Airport Express, 486, 465
+Shivaji Stadium, 432, 426
+Dhaula Kuan, 346, 355
+Delhi Aero City, 300, 318
+IGI Airport, 279, 300
+Dwarka Sec-21-Airport, 253, 277

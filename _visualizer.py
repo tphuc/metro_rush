@@ -13,7 +13,7 @@ CSprite = {'red': rsc_path+'reddot'+prefix,
            'pink': rsc_path + 'pinkdot'+prefix,
            'violet': rsc_path+'violetdot'+prefix,
            'magenta': rsc_path+'magentadot'+prefix,
-           'brown': rsc_path+'browndot'+prefix,
+           'orange': rsc_path+'orangedot'+prefix,
            'white': rsc_path+'whitedot'+prefix}
 
 WIDTH = 1000
@@ -23,26 +23,6 @@ batch = pyglet.graphics.Batch()
 background = pyglet.graphics.OrderedGroup(0)
 foreground = pyglet.graphics.OrderedGroup(1)
 
-
-class MARGIN:
-    up = 30
-    left = WIDTH*7/8
-
-
-class BODY:
-    top1 = HEIGHT//16
-    top2 = top1 + MARGIN.up
-    top3 = top1 + MARGIN.up*2
-    top4 = top1 + MARGIN.up*3
-    top5 = top1 + MARGIN.up*4
-    top6 = top1 + MARGIN.up*6
-    middle = HEIGHT//2
-    bottom1 = HEIGHT * 6/8
-    bottom2 = HEIGHT * 7/8
-    buttonwidth = 15
-    dropdownwidth = 12
-
-
 class KEY:
     zoomin = key.Z
     zoomout = key.X
@@ -51,6 +31,7 @@ class KEY:
     left = key.A
     right = key.D
     drag = key.G
+    outputfile = key.ENTER
 
 
 class MODE:
@@ -58,34 +39,46 @@ class MODE:
     select = 1
     draging = 2
 
+
 class SelectRect:
     start_x = 0
     start_y = 0
     end_x = 0
     end_y = 0
     display = False
+
+
 class RailGrid:
     col = 0
     row = 0
+
+
 Cardinal = {'NS': (0, -1),
             'SN': (0,  1),
             'EW': (-1, 0),
             'WE': (1,  0)}
 
+
 def drawline(start_x, start_y, end_x, end_y):
     pyglet.graphics.draw(2, pyglet.gl.GL_LINES,
-                         ("v2f", (start_x, start_y, end_x, end_y)))
+                         ("v2f", (start_x, start_y, end_x, end_y)),
+                         ('c3B', (150, 150, 150, 150, 150, 150)))
+
 
 def draw_rectangle(start_x, start_y, end_x, end_y):
-    pyglet.graphics.draw(4, pyglet.gl.GL_LINE_LOOP, ('v2f', [start_x, start_y, end_x, start_y, end_x, end_y, start_x, end_y ]))
+    pyglet.graphics.draw(4, pyglet.gl.GL_LINE_LOOP, ('v2f', [
+                         start_x, start_y, end_x, start_y, end_x, end_y, start_x, end_y]))
+
 
 class Station(pyglet.sprite.Sprite):
     size = 10
 
-    def __init__(self, name, colorSprite, x, y, intersect=False):
+    def __init__(self, name, colorSprite, x, y, colorgroup, intersect=False):
         self.texture = pyglet.image.load(colorSprite)
         self.texture.anchor_x = self.texture.width // 2
         self.texture.anchor_y = self.texture.height // 2
+        self.intersect = intersect
+        self.rail_color = colorgroup
         super(Station, self).__init__(self.texture,
                                       x=x, y=y, batch=batch, group=background)
         self.name = name
@@ -136,6 +129,7 @@ class Station(pyglet.sprite.Sprite):
     def is_select(self, start_x, start_y, end_x, end_y):
         return end_x > self.x > start_x and start_y > self.y > end_y
 
+
 class RailWay:
     disparity = (-5, 5)
     intersect = []
@@ -143,6 +137,7 @@ class RailWay:
     def __init__(self, direction, ntrains, names, start_x, start_y, color):
         self.ntrains = ntrains
         self.names = names
+        self.color = color
         self.start_x, self.start_y = start_x, start_y
         self.sprite_img = self.get_sprite_img(color)
         self.direction = direction
@@ -165,7 +160,8 @@ class RailWay:
             if self.names[i].find("Line") > 0:
                 name = self.names[i][:self.names[i].find(':')]
                 if name not in [s.name for s in RailWay.intersect]:
-                    station = Station(name, CSprite['white'], x, y)
+                    station = Station(
+                        name, CSprite['white'], x, y, 'white', intersect=True)
                     self.stations.append(station)
                     RailWay.intersect.append(station)
                 else:
@@ -174,7 +170,7 @@ class RailWay:
                             self.stations.append(station)
             else:
                 self.stations.append(
-                    Station(self.names[i], self.sprite_img, x, y))
+                    Station(self.names[i], self.sprite_img, x, y, self.color))
 
     def draw_lines(self):
         for i in range(len(self.stations)-1):
@@ -195,4 +191,3 @@ class RailWay:
     def doupdate(self, scale):
         for station in self.stations:
             station.doupdate()
-

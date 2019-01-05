@@ -31,8 +31,8 @@ class Window(pyglet.window.Window):
         """ store all the railways """
         self.railways = []
         self.stations = []
-        self.cols = 4
-        self.rows = 4
+        self.cols = 6
+        self.rows = 6
         #self.init_transit_map()
     
     def setup_grid(self, ncol, nrow):
@@ -149,6 +149,8 @@ class Window(pyglet.window.Window):
             self.reset_mode()
         elif symbol == KEY.drag:
             self.mode = MODE.draging
+        elif symbol == KEY.outputfile:
+            self.outputfile()
         else:
             self.reset_mode()
 
@@ -172,7 +174,19 @@ class Window(pyglet.window.Window):
         if not self.selecting:
             for station in self.stations:
                 if station.is_hovering(x, y):
-                    self.selecting.append(station)
+                    if modifiers in [key.MOD_CTRL, key.MOD_SHIFT] and station.rail_color != 'white':
+                        for station in self.stations:
+                            if station.is_hovering(x, y):
+                                for railway in self.railways:
+                                    if railway.color == station.rail_color:
+                                        if modifiers == key.MOD_CTRL:
+                                            self.selecting = [station for station in railway.stations if station.rail_color != 'white']
+                                        else:
+                                            self.selecting = railway.stations
+                                        return
+
+                    else:
+                        self.selecting.append(station)
                     return
 
     """ fired once event """
@@ -196,15 +210,25 @@ class Window(pyglet.window.Window):
         SelectRect.end_x = 0
         SelectRect.end_y = 0
 
+    def outputfile(self):
+        data = ""
+        for railway in self.railways:
+            data += "#" + railway.color + '\n'
+            for station in railway.stations:
+                data += "{}, {}, {}\n".format(station.name, str(int(station.x)), str(int(station.y)))
+        with open('stations', 'w+') as f:
+            f.write(data)
+
 if __name__ == "__main__":
     window = Window(WIDTH, HEIGHT)
     station_dict = parseLineStations('delhi-metro-stations')
     window.addRail('EW', station_dict['Red Line'], 'red')
     window.addRail('NS', station_dict['Yellow Line'], 'yellow')
-    window.addRail('WE', station_dict['Blue Line'], 'blue')
-    window.addRail('SN', station_dict['Magenta Line'], 'magenta')
+    # window.addRail('WE', station_dict['Blue Line'], 'blue')
+    # window.addRail('SN', station_dict['Magenta Line'], 'magenta')
     # window.addRail('NS', station_dict['Pink Line'], 'pink')
     # window.addRail('NS', station_dict['Violet Line'], 'violet')
+    # window.addRail('NS', station_dict['Airport Express'], 'orange')
     # window.init_transit_map()
     window.doupdate()
     pyglet.app.run()
