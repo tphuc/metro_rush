@@ -22,7 +22,7 @@ class Window(pyglet.window.Window):
         - dragging = 2
         """
         self.mode = MODE.free
-        self.selecting = None
+        self.selecting = []
         """ Label display name:
         - display station name when mouse hovering on
         """
@@ -97,6 +97,8 @@ class Window(pyglet.window.Window):
         self.clear()
         for railway in self.railways:
             railway.draw()
+        if SelectRect.display:
+            draw_rectangle(SelectRect.start_x, SelectRect.start_y, SelectRect.end_x, SelectRect.end_y)
 
     def on_key_press(self, symbol, modifiers):
         if symbol == KEY.up:
@@ -124,25 +126,47 @@ class Window(pyglet.window.Window):
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if self.selecting:
-            self.selecting.setxy(x, y)
-            self.selecting.delete_label()
+            for selected in self.selecting:
+                if buttons & KEY.drag:
+                    selected.drag(dx, dy)
+                else:
+                    selected.setxy(x, y)
+                selected.delete_label()
+        else:
+            SelectRect.end_x = x + dx
+            SelectRect.end_y = y + dy
+            SelectRect.display = True
 
+    """ fired once event : mouse click"""
     def on_mouse_press(self, x, y, button, modifiers):
-        self.selecting = None
-        for railway in self.railways:
-            for station in railway.stations:
+        SelectRect.start_x = x
+        SelectRect.start_y = y
+        if not self.selecting:
+            for station in self.stations:
                 if station.is_hovering(x, y):
-                    self.selecting = station
+                    self.selecting.append(station)
                     return
 
+    """ fired once event """
     def on_mouse_release(self, x, y, button, modifiers):
-        self.selecting = None
+        SelectRect.display = False
+        if not self.selecting:
+            for station in self.stations:
+                if station.is_select(SelectRect.start_x, SelectRect.start_y, SelectRect.end_x, SelectRect.end_y):
+                    self.selecting.append(station)
+            SelectRect.start_x = 0
+        else:
+            self.selecting = []
 
     def on_mouse_motion(self, x, y, dx, dy):
-        for railway in self.railways:
-            for station in railway.stations:
-                station.is_hovering(x, y)
+        for station in self.stations:
+            station.is_hovering(x, y)
 
+    def reset_select(self):
+        SelectRect.start_x = 0
+        SelectRect.start_y = 0
+        SelectRect.end_x = 0
+        SelectRect.end_y = 0
 
 if __name__ == "__main__":
     window = Window(WIDTH, HEIGHT)

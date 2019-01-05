@@ -58,14 +58,19 @@ class MODE:
     select = 1
     draging = 2
 
+class SelectRect:
+    start_x = 0
+    start_y = 0
+    end_x = 0
+    end_y = 0
+    display = False
 
 def drawline(start_x, start_y, end_x, end_y):
     pyglet.graphics.draw(2, pyglet.gl.GL_LINES,
                          ("v2f", (start_x, start_y, end_x, end_y)))
 
-def set_line_width(width):
-    pyglet.gl.glLineWidth(width)
-
+def draw_rectangle(start_x, start_y, end_x, end_y):
+    pyglet.graphics.draw(4, pyglet.gl.GL_LINE_LOOP, ('v2f', [start_x, start_y, end_x, start_y, end_x, end_y, start_x, end_y ]))
 
 class Station(pyglet.sprite.Sprite):
     size = 10
@@ -99,9 +104,9 @@ class Station(pyglet.sprite.Sprite):
         self.y = y
         self.display_label = False
 
-    def drag(self, x, y, dx, dy):
-        self.x += dx*1.1
-        self.y += dy*1.1
+    def drag(self, dx, dy):
+        self.x += dx
+        self.y += dy
 
     def create_label(self):
         self.label = pyglet.text.Label(text=self.name, x=self.x, y=self.y+self.height,
@@ -121,6 +126,8 @@ class Station(pyglet.sprite.Sprite):
             self.delete_label()
             return False
 
+    def is_select(self, start_x, start_y, end_x, end_y):
+        return end_x > self.x > start_x and start_y > self.y > end_y
 
 class RailWay:
     disparity = (-5, 5)
@@ -190,3 +197,4 @@ class RailWay:
     def doupdate(self, scale):
         for station in self.stations:
             station.doupdate()
+
