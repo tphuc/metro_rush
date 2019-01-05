@@ -68,7 +68,6 @@ class Window(pyglet.window.Window):
         self.doupdate()
 
     def doupdate(self):
-
         for station in self.stations:
             station.x *= self.scaleX
             station.y *= self.scaleY
