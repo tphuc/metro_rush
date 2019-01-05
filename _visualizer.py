@@ -64,6 +64,13 @@ class SelectRect:
     end_x = 0
     end_y = 0
     display = False
+class RailGrid:
+    col = 0
+    row = 0
+Cardinal = {'NS': (0, -1),
+            'SN': (0,  1),
+            'EW': (-1, 0),
+            'WE': (1,  0)}
 
 def drawline(start_x, start_y, end_x, end_y):
     pyglet.graphics.draw(2, pyglet.gl.GL_LINES,
@@ -138,21 +145,12 @@ class RailWay:
         self.names = names
         self.start_x, self.start_y = start_x, start_y
         self.sprite_img = self.get_sprite_img(color)
-        self.direction = self.get_line_direction(direction)
+        self.direction = direction
+        self.interval = 40
         self._init_stations()
 
     def get_sprite_img(self, color):
         return CSprite[color]
-
-    def get_line_direction(self, direction):
-        self.interval = 40
-        return 1, 0
-        # if direction == 'horizontal':
-        #     self.interval = WIDTH / self.ntrains - self.ntrains
-        #     return (1, 0)
-        # elif direction == 'vertical':
-        #     self.interval = HEIGHT / self.ntrains - self.ntrains
-        #     return (0, -1)
 
     def _init_stations(self):
         self.stations = []

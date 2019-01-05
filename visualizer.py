@@ -14,7 +14,8 @@ class Window(pyglet.window.Window):
         self.zoominrate = 1.3
         self.zoomoutrate = 0.8
         self.moverate = 50
-        self.station_dict = parseLineStations('delhi-metro-stations')
+
+        #self.station_dict = parseLineStations('delhi-metro-stations')
         ############### mode ################
         """ window modes:
         - moving = 0
@@ -30,16 +31,43 @@ class Window(pyglet.window.Window):
         """ store all the railways """
         self.railways = []
         self.stations = []
-        self.init_transit_map()
-        
+        self.cols = 4
+        self.rows = 4
+        #self.init_transit_map()
+    
+    def setup_grid(self, ncol, nrow):
+        self.cols = ncol
+        self.rows = nrow
 
-    def init_transit_map(self):
-        self.railways.append(RailWay('horizontal', len(self.station_dict['Red Line']), self.station_dict['Red Line'],
-                                     50, 400, 'red'))
-        self.railways.append(RailWay('horizontal', len(self.station_dict['Violet Line']), self.station_dict['Violet Line'],
-                                     50, 300, 'magenta'))
+
+    def addRail(self, direction, names, color):
+        dir_vector = Cardinal[direction]
+        if direction.find("N") != -1:
+            RailGrid.col += 1
+            if dir_vector[1] == 1:
+                startloc = self.width * RailGrid.col/self.cols, 0
+            else:
+                startloc = self.width * RailGrid.col/self.cols, self.height
+        else:
+            RailGrid.row += 1
+            if dir_vector[0] == 1:
+                startloc = 0, self.height*(1-RailGrid.row/self.rows)
+            else:
+                startloc = self.width, self.height*(1-RailGrid.row/self.rows)
+            print(startloc, str(dir_vector))
+        self.railways.append(RailWay(dir_vector, len(names), names , *startloc, color))
         for railway in self.railways:
             self.stations += [station for station in railway.stations if station not in self.stations]
+
+    def init_transit_map(self):
+        self.station_dict = parseLineStations('delhi-metro-stations')
+        self.railways.append(RailWay((0, -1), len(self.station_dict['Red Line']), self.station_dict['Red Line'],
+                                     50, 800, 'red'))
+        self.railways.append(RailWay((0, 1), len(self.station_dict['Violet Line']), self.station_dict['Violet Line'],
+                                     500, 0, 'pink'))
+        for railway in self.railways:
+            self.stations += [station for station in railway.stations if station not in self.stations]
+        
 
     def screen_up(self):
         self.focusY -= self.moverate
@@ -170,5 +198,13 @@ class Window(pyglet.window.Window):
 
 if __name__ == "__main__":
     window = Window(WIDTH, HEIGHT)
+    station_dict = parseLineStations('delhi-metro-stations')
+    window.addRail('EW', station_dict['Red Line'], 'red')
+    window.addRail('NS', station_dict['Yellow Line'], 'yellow')
+    window.addRail('WE', station_dict['Blue Line'], 'blue')
+    window.addRail('SN', station_dict['Magenta Line'], 'magenta')
+    # window.addRail('NS', station_dict['Pink Line'], 'pink')
+    # window.addRail('NS', station_dict['Violet Line'], 'violet')
+    # window.init_transit_map()
     window.doupdate()
     pyglet.app.run()
