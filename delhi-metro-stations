@@ -109,7 +109,7 @@
 3:Dhaula Kuan:Conn: Pink Line
 4:Delhi Aero City
 5:IGI Airport
-6:Dwarka Sec-21-Airport
+6:Dwarka Sec-21:Conn: Blue Line
 #Violet Line
 1:Kashmere Gate:Conn: Yellow Line
 2:Lal Quila
@@ -144,7 +144,7 @@
 31:Bata Chowk
 32:Escorts Mujesar
 #Magenta Line
-1:Janakpuri West:Conn: Blue Line
+1:Janak Puri West:Conn: Blue Line
 2:Dabri Mor
 3:Dashrath Puri
 4:Palam

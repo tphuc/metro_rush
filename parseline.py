@@ -13,5 +13,6 @@ def parseLineStations(file):
     return metrodict
 
 
+
 if __name__ == '__main__':
     print(parseLineStations('delhi-metro-stations'))
