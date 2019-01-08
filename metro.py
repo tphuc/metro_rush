@@ -19,6 +19,8 @@ class Graph:
         self.all_path = []
 
     def find_all_path(self, current_node, end_node, sort=True):
+        self.start_node = current_node
+        self.end_node = end_node
         self._find_all_path(current_node, end_node)
         if sort:
             return sorted(self.all_path, key=lambda x: len(x))
@@ -51,14 +53,6 @@ class Graph:
             current_node = current_node.parent
             path.append(current_node)
         return path
-
-    def set_route_startend(self, start, end):
-        self.start_node = start
-        self.end_node = end
-
-    def print_nodes(self):
-        for node in self.nodes:
-            print(node.line, node.name)
 
     def route_cost(self, nodes):
         cost = len(nodes)
@@ -106,9 +100,7 @@ def create_nodes(file):
 nodes = create_nodes('delhi-metro-stations')
 graph = Graph(nodes)
 
-#graph.print_nodes()
-
-graph.set_route_startend(graph.nodes[14], graph.nodes[21])
 all_path = graph.find_all_path(graph.nodes[14], graph.nodes[21])
 
-print(type(all_path[0][0]))
+for route in all_path:
+    print([node.name for node in route])
